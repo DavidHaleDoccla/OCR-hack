@@ -22,6 +22,8 @@ export default function App() {
   const [cameraPermissions, requestCameraPermissions] = useCameraPermissions();
   const [mediaLibraryPermissions, requestMediaLibraryPermissions] =
     useMediaLibraryPermissions();
+  const [heartRate, setHeartRate] = useState("");
+  const [spo2, setSpo2] = useState("");
 
   const [state, setState] = useState<{
     loading: boolean;
@@ -121,7 +123,15 @@ export default function App() {
         }
       );
 
-      console.log(extractReadings(await res.json()));
+      const readings = extractReadings(await res.json());
+
+      if (readings.saturation) {
+        setSpo2(readings.saturation.toString());
+      }
+
+      if (readings.heartRate) {
+        setHeartRate(readings.heartRate.toString());
+      }
     } else {
       image = await launchImageLibraryAsync();
     }
@@ -198,6 +208,12 @@ export default function App() {
                   />
                 </View>
               )}
+              {heartRate && (
+                <Text style={styles.buttonText}>
+                  Heart rate: {heartRate} bpm
+                </Text>
+              )}
+              {spo2 && <Text style={styles.buttonText}>SpO2 {spo2}%</Text>}
               {/* {!!state.textRecognition &&
                 state.textRecognition.map(
                   (item: { text: string }, i: number) => (
