@@ -3,12 +3,10 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  ToastAndroid,
   TouchableOpacity,
   View,
   Image,
   Alert,
-  ImageBackground,
 } from "react-native";
 import {
   launchCameraAsync,
@@ -18,6 +16,7 @@ import {
   PermissionStatus,
 } from "expo-image-picker";
 import MlkitOcr from "react-native-mlkit-ocr";
+import { readAsStringAsync } from "expo-file-system";
 
 export default function App() {
   const [cameraPermissions, requestCameraPermissions] = useCameraPermissions();
@@ -87,7 +86,10 @@ export default function App() {
         return;
       }
       image = await launchCameraAsync();
-      console.log(image);
+      const base64 = await readAsStringAsync(image.uri, {
+        encoding: "base64",
+      });
+      console.log(base64);
     } else {
       image = await launchImageLibraryAsync();
     }
