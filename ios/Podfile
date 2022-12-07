@@ -1,0 +1,2 @@
+platform :ios, '10.0'
+pod 'react-native-mlkit-ocr', :path => '../node_modules/react-native-mlkit-ocr'

@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Doccla OCR",
+    "slug": "docla-ocr",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ]
+  }
+}
