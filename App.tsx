@@ -89,13 +89,55 @@ export default function App() {
       const base64 = await readAsStringAsync(image.uri, {
         encoding: "base64",
       });
-      console.log(base64);
+
+      const body = {
+        requests: [
+          {
+            image: {
+              content: base64,
+            },
+            features: [
+              {
+                type: "TEXT_DETECTION",
+              },
+            ],
+          },
+        ],
+      };
+
+      const jsonBody = JSON.stringify(body);
+
+      const res = await fetch(
+        "https://vision.googleapis.com/v1/images:annotate",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json; charset=utf-8",
+            "x-goog-user-project": "SECRETS",
+            Authorization: "Bearer SECRETS",
+          },
+          body: jsonBody,
+        }
+      );
+
+      console.log(extractReadings(await res.json()));
     } else {
       image = await launchImageLibraryAsync();
     }
-
-    console.log(image);
     onImageSelect(image);
+  }
+
+  function extractReadings(responseBody) {
+    return {
+      all: responseBody["responses"][0]["textAnnotations"][0].description,
+      saturation: parseInt(
+        responseBody["responses"][0]["textAnnotations"][2].description
+      ),
+      heartRate: parseInt(
+        responseBody["responses"][0]["textAnnotations"][4].description
+      ),
+    };
   }
 
   async function onImageSelect(media: { assets: [{ uri: string }] }) {
